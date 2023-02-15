@@ -890,7 +890,10 @@ void ClassScopes::build_interface_scopes() {
     for (const auto& meth : intf_cls->get_vmethods()) {
       const auto& scopes = m_sig_map[meth->get_name()][meth->get_proto()];
       // at least the method itself
-      always_assert_log(!scopes.empty(), "Scope empty for %s", SHOW(meth));
+      if (scopes.empty()) {
+        TRACE_NO_LINE(VIRT, 9, "Scope empty for %s", SHOW(meth));
+        continue;
+      }
       auto& intf_scope = m_interface_scopes[intf_it.first];
       intf_scope.push_back({});
       for (const auto& scope : scopes) {
